@@ -36,11 +36,14 @@ public class MainClass3 {
         Fruit dd = new Orange();
         Fruit ee = new Apple();
         ArrayList<Fruit> tmp = new ArrayList<>();
+        ArrayList<Fruit> tmp1 = new ArrayList<>();
         tmp.add(aa);
         tmp.add(cc);
         tmp.add(ee);
         Box tmpBox = new Box<>(tmp);
+        Box tmpBox1 = new Box<>(tmp1);
         System.out.println(tmpBox.getWeight());
+        tmpBox1.compareBox(tmpBox);
 
 
 
