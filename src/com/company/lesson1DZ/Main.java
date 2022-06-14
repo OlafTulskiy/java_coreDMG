@@ -1,4 +1,4 @@
-package com.company;
+package com.company.lesson1DZ;
 
 import com.company.lesson1DZ.Course;
 import com.company.lesson1DZ.Man;
