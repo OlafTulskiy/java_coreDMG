@@ -25,7 +25,7 @@ public class telBook {
 
     public ArrayList<oneNote> get (String lastname) {
         ArrayList<oneNote> tmp = new ArrayList<>();
-        for (oneNote aa : tlbook) {
+        for (oneNote aa : tlbook) {   
             if (lastname == aa.getLastname())
                 tmp.add(aa);
         }
