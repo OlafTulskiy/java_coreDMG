@@ -19,7 +19,7 @@ public class StartClass {
 
 
     public static void main(String[] args) throws IOException {
-        createFile();
+        createOjectForFile();
         writeToFile();
         AppData apData = readFromFile();
 
@@ -78,7 +78,7 @@ public class StartClass {
         }
     }
 
-    private static void createFile() {
+    private static void createOjectForFile() {
         Random rnd = new Random();
 
         for (int i = 0; i < 100; i++ ) {
