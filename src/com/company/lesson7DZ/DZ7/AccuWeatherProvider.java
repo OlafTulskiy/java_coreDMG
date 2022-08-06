@@ -10,6 +10,7 @@ import okhttp3.Response;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.Properties;
 
 public class AccuWeatherProvider implements WeatherProvider {
@@ -24,10 +25,9 @@ public class AccuWeatherProvider implements WeatherProvider {
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     static Properties prop = new Properties();
-    private String nameOfCity;
 
     @Override
-    public void getWeather(Periods periods) throws IOException {
+    public void getWeather(Periods periods) throws IOException, SQLException {
 
         String cityKey = detectCityKey();
         if (periods.equals(Periods.NOW)) {
@@ -53,10 +53,14 @@ public class AccuWeatherProvider implements WeatherProvider {
             ObjectMapper objectMapper = new ObjectMapper();
 
             //Почему-то так не сработало. Пришлось через массив
-            //ArrayList<WeatherResponse> aa = objectMapper.readValue(response.body().string(), new TypeReference<ArrayList<WeatherResponse>>() {});
-            WeatherResponse[] aa = objectMapper.readValue(response.body().string(), WeatherResponse[].class);
-            System.out.println("Temperature in city now is - " + aa[0].getTemperature().getMetric().getValue() + " C");
-            System.out.println("And weather is - " + aa[0].getWeatherText());
+            //ArrayList<WeatherResponse> ourresp = objectMapper.readValue(response.body().string(), new TypeReference<ArrayList<WeatherResponse>>() {});
+            WeatherResponse[] ourresp = objectMapper.readValue(response.body().string(), WeatherResponse[].class);
+            System.out.println("Temperature in city now is - " + ourresp[0].getTemperature().getMetric().getValue() + " C");
+            System.out.println("And weather is - " + ourresp[0].getWeatherText());
+
+            DatabaseRepositorySQLiteimpl db = new DatabaseRepositorySQLiteimpl();
+            db.createTableIfNotExists();
+            db.saveWeatherData(ourresp[0],ApplicationGlobalState.getInstance().getSelectedCity());
 
             System.out.println("===========================");
 
@@ -84,11 +88,14 @@ public class AccuWeatherProvider implements WeatherProvider {
 
             String jsonResponse = client.newCall(request).execute().body().string();
             ObjectMapper objectMapper = new ObjectMapper();
-            //пожалуйста, не осуждайте за "неправильные" (типа ss) имена объектов, дело житейское, так-то я за венгерскую нотацию конечно
-            WeatherResponse5day ss = objectMapper.readValue(jsonResponse, WeatherResponse5day.class);
+            WeatherResponse5day weatherOn5day = objectMapper.readValue(jsonResponse, WeatherResponse5day.class);
             for (int i = 0; i < 5; i++) {
-                printMessage(i,ss);
+                printMessage(i,weatherOn5day);
             }
+
+        }
+        else if(periods.equals(Periods.CUSTOM)){
+            System.out.println("You are in 3 point of menu");
 
         }
     }
@@ -123,7 +130,6 @@ public class AccuWeatherProvider implements WeatherProvider {
 
         if (objectMapper.readTree(jsonResponse).size() > 0) {
             String cityName = objectMapper.readTree(jsonResponse).get(0).at("/LocalizedName").asText();
-            nameOfCity = cityName;
             String countryName = objectMapper.readTree(jsonResponse).get(0).at("/Country/LocalizedName").asText();
             System.out.println("Find city " + cityName + " in country " + countryName);
         } else throw new IOException("Server returns 0 cities");
@@ -138,7 +144,7 @@ public class AccuWeatherProvider implements WeatherProvider {
     }
 
     private void printMessage( int numberOfDats, WeatherResponse5day ss) {
-        System.out.println("In city - " + nameOfCity + " on date - "+ss.getDailyForecasts().get(numberOfDats).getDate()+
+        System.out.println("In city - " + ApplicationGlobalState.getInstance().getSelectedCity() + " on date - "+ss.getDailyForecasts().get(numberOfDats).getDate()+
                 " will be weather in day - " + ss.getDailyForecasts().get(numberOfDats).getDay().getIconPhrase()+
                 " and in night - "+ss.getDailyForecasts().get(numberOfDats).getNight().getIconPhrase()+
                 ". Temperature at minimum - "+ converteFromFtoC(ss.getDailyForecasts().get(numberOfDats).getTemperature().getMinimum().getValue())+

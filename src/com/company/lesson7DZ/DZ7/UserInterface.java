@@ -1,6 +1,7 @@
 package com.company.lesson7DZ.DZ7;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.Scanner;
 
 public class UserInterface {
@@ -17,6 +18,7 @@ public class UserInterface {
 
             System.out.println("Enter answer: 1 - Get current weather, " +
                 "2 - Get weather on next 5 days, " +
+                "3 - LOad from DB all records " +
                 " exit ");
             String result = scanner.nextLine();
 
@@ -32,6 +34,8 @@ public class UserInterface {
             try {
                 notifyController(result);
             } catch (IOException e) {
+                e.printStackTrace();
+            } catch (SQLException e) {
                 e.printStackTrace();
             }
 
@@ -62,7 +66,7 @@ public class UserInterface {
         }
     }
 
-    private void notifyController(String input) throws IOException {
+    private void notifyController(String input) throws IOException, SQLException {
         controller.onUserInput(input);
     }
 

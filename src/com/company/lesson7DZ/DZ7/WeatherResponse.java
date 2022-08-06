@@ -49,6 +49,7 @@ public class WeatherResponse {
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
+
     @JsonProperty("LocalObservationDateTime")
     public String getLocalObservationDateTime() {
         return localObservationDateTime;
