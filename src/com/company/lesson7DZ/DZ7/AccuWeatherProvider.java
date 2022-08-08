@@ -1,12 +1,11 @@
 package com.company.lesson7DZ.DZ7;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.company.lesson7DZ.DZ7.enums.Periods;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -95,7 +94,10 @@ public class AccuWeatherProvider implements WeatherProvider {
 
         }
         else if(periods.equals(Periods.CUSTOM)){
-            System.out.println("You are in 3 point of menu");
+            DatabaseRepositorySQLiteimpl db = new DatabaseRepositorySQLiteimpl();
+            //ArrayList<WeatherData> myWeather = new ArrayList<WeatherData>();
+
+            //System.out.println("You are in 3 point of menu");
 
         }
     }

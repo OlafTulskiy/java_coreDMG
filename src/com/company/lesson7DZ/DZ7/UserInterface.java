@@ -18,8 +18,8 @@ public class UserInterface {
 
             System.out.println("Enter answer: 1 - Get current weather, " +
                 "2 - Get weather on next 5 days, " +
-                "3 - LOad from DB all records " +
-                " exit ");
+                "3 - LOad from DB all records, " +
+                "exit - for exit in program");
             String result = scanner.nextLine();
 
             checkIsExit(result);
