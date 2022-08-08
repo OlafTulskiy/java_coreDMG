@@ -6,6 +6,8 @@ import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import java.util.ArrayList;
+
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -95,10 +97,13 @@ public class AccuWeatherProvider implements WeatherProvider {
         }
         else if(periods.equals(Periods.CUSTOM)){
             DatabaseRepositorySQLiteimpl db = new DatabaseRepositorySQLiteimpl();
-            //ArrayList<WeatherData> myWeather = new ArrayList<WeatherData>();
-
-            //System.out.println("You are in 3 point of menu");
-
+            ArrayList<WeatherData> myWeather = new ArrayList<WeatherData>();
+            myWeather = db.getAllSavedData(ApplicationGlobalState.getInstance().getSelectedCity());
+            System.out.println("*****************************");
+            System.out.println("This weather data is from DB!!!");
+            for (WeatherData tmp:myWeather) {
+                printMessage(tmp);
+            }
         }
     }
 
@@ -152,6 +157,13 @@ public class AccuWeatherProvider implements WeatherProvider {
                 ". Temperature at minimum - "+ converteFromFtoC(ss.getDailyForecasts().get(numberOfDats).getTemperature().getMinimum().getValue())+
                 "C and at maximum - "+ converteFromFtoC(ss.getDailyForecasts().get(numberOfDats).getTemperature().getMaximum().getValue())+"C.");
 
+        System.out.println("===========================");
+    }
+
+    private void printMessage(WeatherData tmp) {
+        System.out.println("In city - " + tmp.getCity() + " on date - "+ tmp.setLocalDate() +
+                " will be weather - " + tmp.weatherText() +
+                " and temperature is will be - "+ tmp.getTemperatureFromDB());
         System.out.println("===========================");
     }
 

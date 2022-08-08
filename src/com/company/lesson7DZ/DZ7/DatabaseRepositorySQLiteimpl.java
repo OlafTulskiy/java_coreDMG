@@ -46,7 +46,7 @@ public class DatabaseRepositorySQLiteimpl implements DatabaseRepository {
         try (Connection connection = getConnection();
              PreparedStatement saveWeather = connection.prepareStatement(insertWeatherQuery)) {
             saveWeather.setString(1, sityName);
-            saveWeather.setString(2, weatherData.getEpochTime().toString());
+            saveWeather.setString(2, weatherData.getLocalObservationDateTime());
             saveWeather.setString(3, weatherData.getWeatherText());
             saveWeather.setDouble(4, weatherData.getTemperature().getMetric().getValue());
             return saveWeather.execute();
@@ -74,10 +74,10 @@ public class DatabaseRepositorySQLiteimpl implements DatabaseRepository {
         try ( Statement statement = this.getConnection().createStatement()) {
             ResultSet resultSet = statement.executeQuery(gatAllRecords);
             while(resultSet.next()) {
-            myWeather.add(new WeatherData(resultSet.getString(1),
-                    resultSet.getString(2),
-                    resultSet.getString(3),
-                    resultSet.getDouble(4)));
+            myWeather.add(new WeatherData(resultSet.getString("city"),
+                    resultSet.getString("date_time"),
+                    resultSet.getString("weather_text"),
+                    resultSet.getDouble("temperature")));
             }
             return  myWeather;
         } catch (SQLException e) {
